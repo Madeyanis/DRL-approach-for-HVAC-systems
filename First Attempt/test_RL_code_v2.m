@@ -57,7 +57,7 @@ obsInfo.Description = 'Tout, Tzone';
 
 dnn = [
     featureInputLayer(obsInfo.Dimension(1), 'Normalization', 'none', 'Name', 'state')
-    fullyConnectedLayer(7, 'Name', 'CriticStateFC5')
+    fullyConnectedLayer(5, 'Name', 'CriticStateFC5')
     reluLayer('Name','CriticCommonRelu15')
     fullyConnectedLayer(length(actInfo.Elements), 'Name', 'output')];
 
@@ -83,7 +83,7 @@ agentOptions = rlDQNAgentOptions(...
     'NumStepsToLookAhead', 1, ...
     'SequenceLength',1);
 
-agentOptions.EpsilonGreedyExploration.EpsilonDecay = 1e-5;
+agentOptions.EpsilonGreedyExploration.EpsilonDecay = 4e-5;
 
 agent = rlDQNAgent(critic,agentOptions);
 
@@ -91,7 +91,7 @@ agentBlk = [mdl '/RL Agent'];
 
 %% Env definition
 agentBlk = [mdl '/RL Agent'];
-load('FinalAgent.mat', 'agent')
+% load('FinalAgent.mat', 'agent')
 env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
 
 env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);

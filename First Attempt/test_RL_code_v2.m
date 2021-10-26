@@ -41,7 +41,7 @@ theta = 0.15;
 gama = 0.7;
 
 
-%% Agent Creation
+%% Env Creation
 mdl = 'ModelEnv_Test_RL_4';
 
 % Observations and actions definitions
@@ -53,6 +53,7 @@ obsInfo = rlNumericSpec([3 1]);
 obsInfo.Name = 'Observations';
 obsInfo.Description = 'Tout, Tzone';
 
+%% Agent creation
 
 dnn = [
     featureInputLayer(obsInfo.Dimension(1), 'Normalization', 'none', 'Name', 'state')
@@ -88,6 +89,9 @@ agent = rlDQNAgent(critic,agentOptions);
 
 agentBlk = [mdl '/RL Agent'];
 
+%% Env definition
+agentBlk = [mdl '/RL Agent'];
+load('FinalAgent.mat', 'agent')
 env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
 
 env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);
@@ -105,3 +109,10 @@ trainOpts = rlTrainingOptions(...
     'StopTrainingValue',100000000);
 
 trainingStats = train(agent,env,trainOpts);
+
+%% Simulate trained agent
+maxsteps = ceil(Tf/Ts);
+simOpts = rlSimulationOptions('MaxSteps',maxsteps);
+experiences = sim(env,agent,simOpts);
+
+%% 

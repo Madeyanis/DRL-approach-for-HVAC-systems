@@ -116,3 +116,4 @@ simOpts = rlSimulationOptions('MaxSteps',maxsteps);
 experiences = sim(env,agent,simOpts);
 
 %% 
+Rewards = 0;

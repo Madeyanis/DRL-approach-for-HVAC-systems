@@ -45,7 +45,7 @@ gama = 0.7;
 mdl = 'ModelEnv_Test_RL_4';
 
 % Observations and actions definitions
-actInfo = rlFiniteSetSpec([0, 1, 2, 3, 4, 5, 6]);
+actInfo = rlFiniteSetSpec([0, 1, 4, 7]);
 actInfo.Name = 'Heater';
 actInfo.Description = 'Heater Level';
 
@@ -58,7 +58,7 @@ obsInfo.Description = 'Tout, Tzone';
 dnn = [
     featureInputLayer(obsInfo.Dimension(1), 'Normalization', 'none', 'Name', 'state')
     fullyConnectedLayer(5, 'Name', 'CriticStateFC5')
-    reluLayer('Name','CriticCommonRelu15')
+    reluLayer('Name','CriticCommonRelu11')
     fullyConnectedLayer(length(actInfo.Elements), 'Name', 'output')];
 
 
@@ -70,7 +70,7 @@ dnn = [
 
 
 % set some options for the critic
-criticOpts = rlRepresentationOptions('LearnRate',0.005,'GradientThreshold',1);
+criticOpts = rlRepresentationOptions('LearnRate',0.01,'GradientThreshold',1);
 
 % create the critic based on the network approximator
 critic = rlQValueRepresentation(dnn,obsInfo,actInfo,'Observation',{'state'},criticOpts);
@@ -81,9 +81,12 @@ agentOptions = rlDQNAgentOptions(...
     'SampleTime', Ts, ...
     'ExperienceBufferLength',1e6, ...
     'NumStepsToLookAhead', 1, ...
+    'TargetUpdateFrequency', 1, ...
     'SequenceLength',1);
 
-agentOptions.EpsilonGreedyExploration.EpsilonDecay = 4e-5;
+agentOptions.EpsilonGreedyExploration.EpsilonDecay = 1e-5;
+% agentOptions.EpsilonGreedyExploration.EpsilonMin = 0.005;
+% agentOptions.EpsilonGreedyExploration.Epsilon = 0.95;
 
 agent = rlDQNAgent(critic,agentOptions);
 
@@ -91,7 +94,7 @@ agentBlk = [mdl '/RL Agent'];
 
 %% Env definition
 agentBlk = [mdl '/RL Agent'];
-% load('FinalAgent.mat', 'agent')
+% load('FinalAgent2.mat', 'agent')
 env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
 
 env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);

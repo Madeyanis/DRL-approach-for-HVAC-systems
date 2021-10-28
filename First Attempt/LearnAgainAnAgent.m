@@ -1,7 +1,8 @@
 clc
-clear all
+clear 
 close all
 
+%% Load Agent
 load('FinalAgent2.mat', 'agent');
 
 Ts = 0.2;
@@ -34,7 +35,7 @@ Tout = [7 6 5 6 4 4 6 8 9 10 11 12 14 14 16 17 14 12 10 9 8 8 7 6];
 % Tout = 10*ones(1, Tf);
 % Tout = [7 6 5 6 4 4 6 8 9 10 11 12];
 % Ref = [zeros(1, 7) 20*ones(1, 9) zeros(1, 8)];
-Ref = 20*ones(1, 24);
+Ref = [20*ones(1, 24)];
 % Ref = [zeros(1, Tf/3) 19*ones(1,2*(Tf/3))];
 Tz_init = Tout(1);
 
@@ -57,12 +58,19 @@ obsInfo.Description = 'Tout, Tzone';
 
 %% Env definition
 agentBlk = [mdl '/RL Agent'];
-% load('FinalAgent2.mat', 'agent')
 env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
-
 env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);
 
-%% Simulate trained agent
+%% Train part
+maxepisodes = 5000;
 maxsteps = ceil(Tf/Ts);
-simOpts = rlSimulationOptions('MaxSteps',maxsteps);
-experiences = sim(env,agent,simOpts);
+trainOpts = rlTrainingOptions(...
+    'MaxEpisodes',maxepisodes, ...
+    'MaxStepsPerEpisode',maxsteps, ...
+    'ScoreAveragingWindowLength',30, ...
+    'Verbose',false, ...
+    'Plots','training-progress',...
+    'StopTrainingCriteria','AverageReward',...
+    'StopTrainingValue',100000000);
+
+trainingStats = train(agent,env,trainOpts);

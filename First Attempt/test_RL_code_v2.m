@@ -45,9 +45,11 @@ gama = 0.7;
 mdl = 'ModelEnv_Test_RL_4';
 
 % Observations and actions definitions
-actInfo = rlFiniteSetSpec([0, 1, 4, 7]);
+actInfo = rlNumericSpec([1 1]);
 actInfo.Name = 'Heater';
 actInfo.Description = 'Heater Level';
+actInfo.UpperLimit = 6;
+actInfo.LowerLimit = 0;
 
 obsInfo = rlNumericSpec([3 1]);
 obsInfo.Name = 'Observations';
@@ -55,26 +57,35 @@ obsInfo.Description = 'Tout, Tzone';
 
 %% Agent creation
 
-dnn = [
-    featureInputLayer(obsInfo.Dimension(1), 'Normalization', 'none', 'Name', 'state')
-    fullyConnectedLayer(5, 'Name', 'CriticStateFC5')
-    reluLayer('Name','CriticCommonRelu11')
-    fullyConnectedLayer(length(actInfo.Elements), 'Name', 'output')];
+L = 4; % number of neurons
+statePath = [
+    featureInputLayer(3,'Normalization','none','Name','observation')
+    fullyConnectedLayer(L,'Name','fc1')
+    reluLayer('Name','relu1')
+    fullyConnectedLayer(L,'Name','fc2')
+    additionLayer(2,'Name','add')
+    reluLayer('Name','relu2')
+    fullyConnectedLayer(L,'Name','fc3')
+    reluLayer('Name','relu3')
+    fullyConnectedLayer(1,'Name','fc4')];
+
+actionPath = [
+    featureInputLayer(1,'Normalization','none','Name','action')
+    fullyConnectedLayer(L, 'Name', 'fc5')];
+
+criticNetwork = layerGraph(statePath);
+criticNetwork = addLayers(criticNetwork, actionPath);
+    
+criticNetwork = connectLayers(criticNetwork,'fc5','add/in2');
+
+criticOptions = rlRepresentationOptions('LearnRate',1e-3,'GradientThreshold',1,'L2RegularizationFactor',1e-4);
 
 
-% dnn = [
-%     featureInputLayer(obsInfo.Dimension(1), 'Normalization', 'none', 'Name', 'state')
-%     lstmLayer(25, 'Name', 'lstm1')
-%     fullyConnectedLayer(length(actInfo.Elements), 'Name', 'output')];
 
 
 
-% set some options for the critic
-criticOpts = rlRepresentationOptions('LearnRate',0.01,'GradientThreshold',1);
 
-% create the critic based on the network approximator
-critic = rlQValueRepresentation(dnn,obsInfo,actInfo,'Observation',{'state'},criticOpts);
-
+%% Options
 agentOptions = rlDQNAgentOptions(...
     'UseDoubleDQN',false, ...
     'TargetSmoothFactor',5e-3, ...

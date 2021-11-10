@@ -45,15 +45,15 @@ gama = 0.7;
 mdl = 'ModelEnv_Test_RL_4';
 
 % Observations and actions definitions
-actionInfo = rlNumericSpec([1 1]);
-actionInfo.Name = 'Heater';
-actionInfo.Description = 'Heater Level';
-actionInfo.UpperLimit = 6;
-actionInfo.LowerLimit = 0;
+actInfo = rlNumericSpec([1 1]);
+actInfo.Name = 'Heater';
+actInfo.Description = 'Heater Level';
+actInfo.UpperLimit = 6;
+actInfo.LowerLimit = 0;
 
-observationInfo = rlNumericSpec([3 1]);
-observationInfo.Name = 'Observations';
-observationInfo.Description = 'Tout, Tzone';
+obsInfo = rlNumericSpec([3 1]);
+obsInfo.Name = 'Observations';
+obsInfo.Description = 'Tout, Tzone';
 
 %% Agent creation
 
@@ -124,7 +124,7 @@ agentBlk = [mdl '/RL Agent'];
 %% Env definition
 agentBlk = [mdl '/RL Agent'];
 % load('FinalAgent2.mat', 'agent')
-env = rlSimulinkEnv(mdl,agentBlk, observationInfo, actionInfo);
+env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
 
 env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);
 
@@ -143,5 +143,8 @@ trainOpts = rlTrainingOptions(...
 trainingStats = train(agent,env,trainOpts);
 
 %% Simulate trained agent
+maxsteps = ceil(Tf/Ts);
+simOpts = rlSimulationOptions('MaxSteps',maxsteps);
+experiences = sim(env,agent,simOpts);
 
 %% 

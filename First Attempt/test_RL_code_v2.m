@@ -57,21 +57,24 @@ observationInfo.Description = 'Tout, Tzone';
 
 %% Agent creation
 
-L = 4; % number of neurons
+L = 5; % number of neurons
 statePath = [
     featureInputLayer(3,'Normalization','none','Name','observation')
     fullyConnectedLayer(L,'Name','fc1')
     reluLayer('Name','relu1')
-    fullyConnectedLayer(L,'Name','fc2')
+    fullyConnectedLayer(L-1,'Name','fc2')
+    reluLayer('Name', 'relu2')
     additionLayer(2,'Name','add')
-    reluLayer('Name','relu2')
-    fullyConnectedLayer(L,'Name','fc3')
-    reluLayer('Name','relu3')
-    fullyConnectedLayer(1,'Name','fc4')];
+    fullyConnectedLayer(L,'Name','fc4')
+    reluLayer('Name','relu4')
+    fullyConnectedLayer(1,'Name','fc7')
+    reluLayer('Name', 'relu7')];
 
 actionPath = [
     featureInputLayer(1,'Normalization','none','Name','action')
-    fullyConnectedLayer(L, 'Name', 'fc5')];
+    fullyConnectedLayer(L-1, 'Name', 'fc5')
+    reluLayer('Name', 'relu5')];
+    
 
 criticNetwork = layerGraph(statePath);
 criticNetwork = addLayers(criticNetwork, actionPath);
@@ -85,24 +88,13 @@ critic = rlQValueRepresentation(criticNetwork,observationInfo,actionInfo,...
 
 actorNetwork = [
     featureInputLayer(3,'Normalization','none','Name','observation')
-    fullyConnectedLayer(L,'Name','fc1')
+    fullyConnectedLayer(L+1,'Name','fc1')
     reluLayer('Name','relu1')
-    fullyConnectedLayer(L,'Name','fc2')
-    reluLayer('Name','relu2')
-    fullyConnectedLayer(L,'Name','fc3')
-    reluLayer('Name','relu3')
-    fullyConnectedLayer(1,'Name','fc4')
-    tanhLayer('Name','tanh1')
-    scalingLayer('Name','ActorScaling1','Scale',2.5,'Bias',-0.5)];
+    fullyConnectedLayer(1,'Name','fc4')];
 
-actorOptions = rlRepresentationOptions('LearnRate',1e-4,'GradientThreshold',1,'L2RegularizationFactor',1e-4);
+actorOptions = rlRepresentationOptions('LearnRate',1e-2,'GradientThreshold',1);
 actor = rlDeterministicActorRepresentation(actorNetwork,observationInfo,actionInfo,...
-    'Observation',{'observation'},'Action',{'ActorScaling1'},actorOptions);
-
-
-
-
-
+    'Observation',{'observation'},'Action',{'fc4'},actorOptions);
 
 %% Options
 

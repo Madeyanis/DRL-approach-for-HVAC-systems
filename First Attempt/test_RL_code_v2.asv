@@ -57,7 +57,7 @@ observationInfo.Description = 'Tout, Tzone';
 
 %% Agent creation
 
-L = 20; % number of neurons
+L = 5; % number of neurons
 statePath = [
     featureInputLayer(3,'Normalization','none','Name','observation')
     fullyConnectedLayer(L,'Name','fc1')
@@ -79,7 +79,7 @@ criticNetwork = addLayers(criticNetwork, actionPath);
     
 criticNetwork = connectLayers(criticNetwork,'fc5','add/in2');
 
-criticOptions = rlRepresentationOptions('LearnRate',1e-4,'GradientThreshold',1,'L2RegularizationFactor',1e-4);
+criticOptions = rlRepresentationOptions('LearnRate',1e-3,'GradientThreshold',1,'L2RegularizationFactor',1e-4);
 
 critic = rlQValueRepresentation(criticNetwork,observationInfo,actionInfo,...
     'Observation',{'observation'},'Action',{'action'},criticOptions);
@@ -88,14 +88,11 @@ actorNetwork = [
     featureInputLayer(3,'Normalization','none','Name','observation')
     fullyConnectedLayer(L+1,'Name','fc1')
     reluLayer('Name','relu1')
-    fullyConnectedLayer(L+2,'Name','fc2')
-    reluLayer('Name', 'relu2')
-    fullyConnectedLayer(1, 'Name', 'Out')
-    ];
+    fullyConnectedLayer(1,'Name','fc4')];
 
-actorOptions = rlRepresentationOptions('LearnRate',1e-4,'GradientThreshold',1);
+actorOptions = rlRepresentationOptions('LearnRate',1e-2,'GradientThreshold',1);
 actor = rlDeterministicActorRepresentation(actorNetwork,observationInfo,actionInfo,...
-    'Observation',{'observation'},'Action',{'Out'},actorOptions);
+    'Observation',{'observation'},'Action',{'fc4'},actorOptions);
 
 %% Options
 
@@ -103,7 +100,7 @@ agentOptions = rlDDPGAgentOptions(...
     'SampleTime',Ts,...
     'TargetSmoothFactor',1e-3,...
     'ExperienceBufferLength',1e6,...
-    'DiscountFactor',0.5,...
+    'DiscountFactor',0.99,...
     'MiniBatchSize',64);
 
 
@@ -130,7 +127,7 @@ trainOpts = rlTrainingOptions(...
     'StopTrainingCriteria','AverageReward',...
     'StopTrainingValue',100000000);
 
-trainingStats = train(agentConti,env,trainOpts);
+trainingStats = train(agent,env,trainOpts);
 
 %% Simulate trained agent
 

@@ -62,18 +62,14 @@ statePath = [
     featureInputLayer(3,'Normalization','none','Name','observation')
     fullyConnectedLayer(L,'Name','fc1')
     reluLayer('Name','relu1')
-    fullyConnectedLayer(L-1,'Name','fc2')
-    reluLayer('Name', 'relu2')
     additionLayer(2,'Name','add')
-    fullyConnectedLayer(L,'Name','fc4')
-    reluLayer('Name','relu4')
-    fullyConnectedLayer(1,'Name','fc7')
-    reluLayer('Name', 'relu7')];
+    reluLayer('Name','relu2')
+    fullyConnectedLayer(1,'Name','fc2')
+    reluLayer('Name', 'relu3')];
 
 actionPath = [
     featureInputLayer(1,'Normalization','none','Name','action')
-    fullyConnectedLayer(L-1, 'Name', 'fc5')
-    reluLayer('Name', 'relu5')];
+    fullyConnectedLayer(L-1, 'Name', 'fc3')];
     
 
 criticNetwork = layerGraph(statePath);

@@ -2,7 +2,7 @@ clear all
 close all
 clc
 
-Ts = 0.2;
+Ts = 0.5;
 Tf = 24;
 
 mdot = 50;
@@ -57,16 +57,14 @@ observationInfo.Description = 'Tout, Tzone';
 
 %% Agent creation
 
-L = 5; % number of neurons
+L = 10; % number of neurons
 statePath = [
-    featureInputLayer(3,'Normalization','none','Name','observation')
+    featureInputLayer(3, 'Name','observation')
     fullyConnectedLayer(L,'Name','fc1')
     reluLayer('Name','relu1')
     fullyConnectedLayer(L, 'Name', 'fc2')
     additionLayer(2,'Name','add')
     reluLayer('Name','relu2')
-    fullyConnectedLayer(L,'Name','fc3')
-    reluLayer('Name', 'relu3')
     fullyConnectedLayer(1, 'Name', 'fc4')];
 
 actionPath = [
@@ -79,20 +77,21 @@ criticNetwork = addLayers(criticNetwork, actionPath);
     
 criticNetwork = connectLayers(criticNetwork,'fc5','add/in2');
 
-criticOptions = rlRepresentationOptions('LearnRate',1e-3,'GradientThreshold',1,'L2RegularizationFactor',1e-4);
+criticOptions = rlRepresentationOptions('LearnRate',1e-4,'GradientThreshold',1,'L2RegularizationFactor',1e-4);
 
 critic = rlQValueRepresentation(criticNetwork,observationInfo,actionInfo,...
     'Observation',{'observation'},'Action',{'action'},criticOptions);
 
 actorNetwork = [
-    featureInputLayer(3,'Normalization','none','Name','observation')
+    featureInputLayer(3,'Name','observation')
     fullyConnectedLayer(L+1,'Name','fc1')
     reluLayer('Name','relu1')
-    fullyConnectedLayer(1,'Name','fc4')];
+    fullyConnectedLayer(1, 'Name', 'Out')
+    ];
 
-actorOptions = rlRepresentationOptions('LearnRate',1e-2,'GradientThreshold',1);
+actorOptions = rlRepresentationOptions('LearnRate',1e-3, 'Optimizer', 'adam');
 actor = rlDeterministicActorRepresentation(actorNetwork,observationInfo,actionInfo,...
-    'Observation',{'observation'},'Action',{'fc4'},actorOptions);
+    'Observation',{'observation'},'Action',{'Out'},actorOptions);
 
 %% Options
 
@@ -127,7 +126,7 @@ trainOpts = rlTrainingOptions(...
     'StopTrainingCriteria','AverageReward',...
     'StopTrainingValue',100000000);
 
-trainingStats = train(agent,env,trainOpts);
+trainingStats = train(agentConti,env,trainOpts);
 
 %% Simulate trained agent
 

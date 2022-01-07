@@ -2,7 +2,7 @@ clear all
 close all
 clc
 
-Ts = 0.2;
+Ts = 0.5;
 Tf = 24;
 
 mdot = 50;
@@ -57,16 +57,18 @@ observationInfo.Description = 'Tout, Tzone';
 
 %% Agent creation
 
-L = 20; % number of neurons
+L = 12; % number of neurons
 statePath = [
-    featureInputLayer(3,'Normalization','none','Name','observation')
-    fullyConnectedLayer(L,'Name','fc1')
-    reluLayer('Name','relu1')
+    featureInputLayer(3, 'Name','observation')
     fullyConnectedLayer(L, 'Name', 'fc2')
     additionLayer(2,'Name','add')
     reluLayer('Name','relu2')
-    fullyConnectedLayer(L,'Name','fc3')
-    reluLayer('Name', 'relu3')
+    fullyConnectedLayer(L+1,'Name','fc10')
+    reluLayer('Name','relu10')
+    fullyConnectedLayer(L+1,'Name','fc11')
+    reluLayer('Name','relu11')
+    fullyConnectedLayer(L+1,'Name','fc12')
+    reluLayer('Name','relu12')
     fullyConnectedLayer(1, 'Name', 'fc4')];
 
 actionPath = [
@@ -85,15 +87,23 @@ critic = rlQValueRepresentation(criticNetwork,observationInfo,actionInfo,...
     'Observation',{'observation'},'Action',{'action'},criticOptions);
 
 actorNetwork = [
-    featureInputLayer(3,'Normalization','none','Name','observation')
+    featureInputLayer(3,'Name','observation')
     fullyConnectedLayer(L+1,'Name','fc1')
     reluLayer('Name','relu1')
-    fullyConnectedLayer(L+2,'Name','fc2')
-    reluLayer('Name', 'relu2')
+    fullyConnectedLayer(L+1,'Name','fc2')
+    reluLayer('Name','relu2')
+    fullyConnectedLayer(L+1,'Name','fc3')
+    reluLayer('Name','relu3')
+    fullyConnectedLayer(L+1,'Name','fc4')
+    reluLayer('Name','relu4')
+    fullyConnectedLayer(L+1,'Name','fc5')
+    reluLayer('Name','relu5')
+    fullyConnectedLayer(L+1,'Name','fc6')
+    reluLayer('Name','relu6')
     fullyConnectedLayer(1, 'Name', 'Out')
     ];
 
-actorOptions = rlRepresentationOptions('LearnRate',1e-4,'GradientThreshold',1);
+actorOptions = rlRepresentationOptions('LearnRate',1e-4, 'Optimizer', 'adam');
 actor = rlDeterministicActorRepresentation(actorNetwork,observationInfo,actionInfo,...
     'Observation',{'observation'},'Action',{'Out'},actorOptions);
 
@@ -103,7 +113,7 @@ agentOptions = rlDDPGAgentOptions(...
     'SampleTime',Ts,...
     'TargetSmoothFactor',1e-3,...
     'ExperienceBufferLength',1e6,...
-    'DiscountFactor',0.5,...
+    'DiscountFactor',0.99,...
     'MiniBatchSize',64);
 
 

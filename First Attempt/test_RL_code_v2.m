@@ -45,7 +45,7 @@ gama = 0.7;
 mdl = 'ModelEnv_Test_RL_4';
 
 % Observations and actions definitions
-actInfo = rlFiniteSetSpec([0, 1, 4, 7]);
+actInfo = rlFiniteSetSpec([0, 1, 2, 3, 4, 5, 6]);
 actInfo.Name = 'Heater';
 actInfo.Description = 'Heater Level';
 

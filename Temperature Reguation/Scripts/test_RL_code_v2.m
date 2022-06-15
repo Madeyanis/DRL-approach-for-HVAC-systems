@@ -42,7 +42,7 @@ gama = 0.7;
 
 
 %% Env Creation
-mdl = 'ModelEnv_Test_RL_4';
+mdl = 'C:\Users\masdoua1\OneDrive\GitHub\RL approach\Temperature Reguation\Simulink models\ModelEnv_Test_RL_4';
 
 % Observations and actions definitions
 actionInfo = rlNumericSpec([1 1]);

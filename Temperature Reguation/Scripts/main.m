@@ -55,19 +55,18 @@ obsInfo.Name = 'Observations';
 obsInfo.Description = 'Tout, Tzone';
 
 %% Agent creation
-
+L = 50;
 dnn = [
     featureInputLayer(obsInfo.Dimension(1), 'Normalization', 'none', 'Name', 'state')
-    fullyConnectedLayer(7, 'Name', 'CriticStateFC5')
-    reluLayer('Name','CriticCommonRelu15')
+    fullyConnectedLayer(L, 'Name', 'fc2')
+    reluLayer('Name','relu2')
+    fullyConnectedLayer(L+1,'Name','fc10')
+    reluLayer('Name','relu10')
+    fullyConnectedLayer(L+1,'Name','fc11')
+    reluLayer('Name','relu11')
+    fullyConnectedLayer(L+1,'Name','fc12')
+    reluLayer('Name','relu12')
     fullyConnectedLayer(length(actInfo.Elements), 'Name', 'output')];
-
-
-% dnn = [
-%     featureInputLayer(obsInfo.Dimension(1), 'Normalization', 'none', 'Name', 'state')
-%     lstmLayer(25, 'Name', 'lstm1')
-%     fullyConnectedLayer(length(actInfo.Elements), 'Name', 'output')];
-
 
 
 % set some options for the critic

@@ -1,4 +1,4 @@
-@@ -0,0 +1,118 @@
+
 clear all
 close all
 clc
@@ -43,7 +43,7 @@ gama = 0.7;
 
 
 %% Env Creation
-mdl = 'ModelEnv_Test_RL_4';
+mdl = 'model';
 
 % Observations and actions definitions
 actInfo = rlFiniteSetSpec([0, 1, 2, 3, 4, 5, 6]);
@@ -92,7 +92,7 @@ agentBlk = [mdl '/RL Agent'];
 
 %% Env definition
 agentBlk = [mdl '/RL Agent'];
-load('FinalAgent.mat', 'agent')
+% load('FinalAgent.mat', 'agent')
 env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
 
 env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);

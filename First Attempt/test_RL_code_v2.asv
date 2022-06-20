@@ -28,8 +28,8 @@ Bd = 0.03;
 Atz = -0.15;
 Bh = mdot/(3*M);
 
-Tout = [7 6 5 6 4 4 6 8 9 10 11 12 14 14 16 17 14 12 10 9 8 8 7 6];
-% Tout = 30*ones(1, Tf);
+% % Tout = [7 6 5 6 4 4 6 8 9 10 11 12 14 14 16 17 14 12 10 9 8 8 7 6];
+Tout = 10*ones(1, Tf);
 % Tout = [7 6 5 6 4 4 6 8 9 10 11 12];
 % Ref = [zeros(1, 7) 20*ones(1, 9) zeros(1, 8)];
 Ref = [20*ones(1, 24)];
@@ -45,7 +45,7 @@ gama = 0.7;
 mdl = 'ModelEnv_Test_RL_4';
 
 % Observations and actions definitions
-actInfo = rlFiniteSetSpec([0, 1, 4, 7]);
+actInfo = rlFiniteSetSpec([0, 1, 2, 3, 4, 5, 6]);
 actInfo.Name = 'Heater';
 actInfo.Description = 'Heater Level';
 
@@ -57,8 +57,8 @@ obsInfo.Description = 'Tout, Tzone';
 
 dnn = [
     featureInputLayer(obsInfo.Dimension(1), 'Normalization', 'none', 'Name', 'state')
-    fullyConnectedLayer(5, 'Name', 'CriticStateFC5')
-    reluLayer('Name','CriticCommonRelu11')
+    fullyConnectedLayer(7, 'Name', 'CriticStateFC5')
+    reluLayer('Name','CriticCommonRelu15')
     fullyConnectedLayer(length(actInfo.Elements), 'Name', 'output')];
 
 
@@ -70,7 +70,7 @@ dnn = [
 
 
 % set some options for the critic
-criticOpts = rlRepresentationOptions('LearnRate',0.01,'GradientThreshold',1);
+criticOpts = rlRepresentationOptions('LearnRate',0.005,'GradientThreshold',1);
 
 % create the critic based on the network approximator
 critic = rlQValueRepresentation(dnn,obsInfo,actInfo,'Observation',{'state'},criticOpts);
@@ -81,12 +81,9 @@ agentOptions = rlDQNAgentOptions(...
     'SampleTime', Ts, ...
     'ExperienceBufferLength',1e6, ...
     'NumStepsToLookAhead', 1, ...
-    'TargetUpdateFrequency', 1, ...
     'SequenceLength',1);
 
 agentOptions.EpsilonGreedyExploration.EpsilonDecay = 1e-5;
-% agentOptions.EpsilonGreedyExploration.EpsilonMin = 0.005;
-% agentOptions.EpsilonGreedyExploration.Epsilon = 0.95;
 
 agent = rlDQNAgent(critic,agentOptions);
 
@@ -94,7 +91,7 @@ agentBlk = [mdl '/RL Agent'];
 
 %% Env definition
 agentBlk = [mdl '/RL Agent'];
-% load('FinalAgent2.mat', 'agent')
+load('FinalAgent.mat', 'agent')
 env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
 
 env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);

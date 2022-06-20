@@ -42,7 +42,7 @@ gama = 0.7;
 
 
 %% Env Creation
-mdl = 'ModelEnv_Test_RL_5';
+mdl = 'ModelEnv_Test_RL_5_test';
 
 % Observations and actions definitions
 actionInfo = rlNumericSpec([1 1]);

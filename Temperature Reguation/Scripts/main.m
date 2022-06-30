@@ -29,11 +29,11 @@ Bd = 0.03;
 Atz = -0.15;
 Bh = mdot/(3*M);
 
-% % Tout = [7 6 5 6 4 4 6 8 9 10 11 12 14 14 16 17 14 12 10 9 8 8 7 6];
-% Tout = 10*ones(1, Tf);
-Tout = [7 6 5 6 4 4 6 8 9 10 11 12];
+aaa = 5;
+bbb = 18;
+Tout = (bbb-aaa).*rand(Tf/Ts,1) + aaa;
 % Ref = [zeros(1, 7) 20*ones(1, 9) zeros(1, 8)];
-Ref = [20*ones(1, 24)];
+Ref = 20*ones(1, 24);
 % Ref = [zeros(1, Tf/3) 19*ones(1,2*(Tf/3))];
 Tz_init = Tout(1);
 
@@ -66,6 +66,7 @@ dnn = [
     reluLayer('Name','relu11')
     fullyConnectedLayer(L+1,'Name','fc12')
     reluLayer('Name','relu12')
+    dropoutLayer(0.5)
     fullyConnectedLayer(length(actInfo.Elements), 'Name', 'output')];
 
 

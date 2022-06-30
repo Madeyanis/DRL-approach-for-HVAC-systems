@@ -29,12 +29,13 @@ Bd = 0.03;
 Atz = -0.15;
 Bh = mdot/(3*M);
 
-% % Tout = [7 6 5 6 4 4 6 8 9 10 11 12 14 14 16 17 14 12 10 9 8 8 7 6];
-% Tout = 10*ones(1, Tf);
-% Tout = [7 6 5 6 4 4 6 8 9 10 11 12];
-aaa = 5;
-bbb = 18;
-Tout = (bbb-aaa).*rand(Tf/Ts,1) + aaa;
+
+Tout = [7 6 5 4 4 5 6 9 5 7 6 7 8 8 7 8 8 7 8 9 8 9 8 8 7 7 6 6 6 5];
+% Tout = [3 3 4 4 3 5 6 6 7 7 8 8 9 9 9 8 8 8 7 7 7 6 6 6 5 4 4 5 4 3 3];
+
+% aaa = 5;
+% bbb = 18;
+% Tout = (bbb-aaa).*rand(Tf/Ts,1) + aaa;
 % Ref = [zeros(1, 7) 20*ones(1, 9) zeros(1, 8)];
 Ref = 20*ones(1, 24);
 % Ref = [zeros(1, Tf/3) 19*ones(1,2*(Tf/3))];

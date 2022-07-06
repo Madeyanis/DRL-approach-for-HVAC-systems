@@ -55,7 +55,7 @@ obsInfo.Name = 'Observations';
 obsInfo.Description = 'Tout, Tzone';
 
 %% Agent creation
-L = 200;
+L = 10;
 dnn = [
     featureInputLayer(obsInfo.Dimension(1), 'Normalization', 'none', 'Name', 'state')
     fullyConnectedLayer(L, 'Name', 'fc2')

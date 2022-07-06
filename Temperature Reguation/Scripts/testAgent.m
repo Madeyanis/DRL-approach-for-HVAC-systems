@@ -61,7 +61,7 @@ obsInfo.Description = 'Tout, Tzone';
 
 %% Env definition
 agentBlk = [mdl '/RL Agent'];
-load('AgentDQNSandwichDjel.mat', 'agent')
+load('AgentDQN147.mat', 'agent')
 env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
 
 env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);

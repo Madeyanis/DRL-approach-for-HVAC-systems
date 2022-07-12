@@ -74,5 +74,5 @@ experiences = sim(env,agent,simOpts);
 tz = experiences.SimulationInfo.simout.Data(1:5:end);
 tz(1) = [];
 tz(end) = [];
-matrixAsauvegarder = [Tout; Ref; tz];
-save('Data\exp1.mat', matrixAsauvegarder);
+matrixAsauvegarder = [Tout; Ref; tz'];
+save('exp1.mat', matrixAsauvegarder);

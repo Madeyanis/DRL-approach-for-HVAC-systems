@@ -69,3 +69,5 @@ env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);
 maxsteps = ceil(Tf/Ts);
 simOpts = rlSimulationOptions('MaxSteps',maxsteps);
 experiences = sim(env,agent,simOpts);
+
+%% sa

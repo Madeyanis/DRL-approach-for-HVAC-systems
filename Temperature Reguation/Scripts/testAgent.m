@@ -81,4 +81,4 @@ control = experiences.SimulationInfo.simout.Data(1:5:end, 3);
 control(1) = [];
 control(end) = [];
 matrixAsauvegarder = [Tout; Ref; tz'; fault'; control'];
-save('C:\Users\masdoua1\OneDrive\GitHub\RL approach\Temperature Reguation\Scripts\Data\exp1.mat', 'matrixAsauvegarder');
+save('C:\Users\masdoua1\OneDrive\GitHub\RL approach\Temperature Reguation\Scripts\Data\exp13.mat', 'matrixAsauvegarder');

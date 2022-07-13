@@ -73,12 +73,12 @@ experiences = sim(env,agent,simOpts);
 %% sauvegarder les matrices
 tz = experiences.SimulationInfo.simout.Data(1:5:end, 2);
 tz(1) = [];
-tz(end) = [];
+tz(25:end) = [];
 fault = experiences.SimulationInfo.simout.Data(1:5:end, 1);
 fault(1) = [];
-fault(end) = [];
+fault(25:end) = [];
 control = experiences.SimulationInfo.simout.Data(1:5:end, 3);
 control(1) = [];
-control(end) = [];
+control(25:end) = [];
 matrixAsauvegarder = [Tout; Ref; tz'; fault'; control'];
-save('C:\Users\masdoua1\OneDrive\GitHub\RL approach\Temperature Reguation\Scripts\Data\exp13.mat', 'matrixAsauvegarder');
+save('C:\Users\masdoua1\OneDrive\GitHub\RL approach\Temperature Reguation\Scripts\Data\exp26.mat', 'matrixAsauvegarder');

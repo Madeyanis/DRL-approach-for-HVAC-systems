@@ -44,6 +44,10 @@ alpha = 0.15;
 theta = 0.15;
 gama = 0.7;
 
+%% Faults
+
+biais_sensor = 1;
+
 
 %% Env Creation
 mdl = 'model';

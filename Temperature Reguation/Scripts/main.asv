@@ -15,7 +15,7 @@ s1 = (6*4) * 2;
 s2 = (6*3.5) * 2;
 s3 = (4*3.5) * 2;
 s = s1 + s2 + s3;
-R = e * k/s; R = R*2.5; % modification de la valeur de R
+R = e * k/s ; R = R*10;
 c = 1256; c = c / 3600;
 
 % Tref et Tout
@@ -28,12 +28,9 @@ Bd = 0.03;
 Atz = -0.15;
 Bh = mdot/(3*M);
 
-
-Tout = [0 1 0 1 2 2 3 5 6 6 7 6 6 5 5 4 4 3 4 3 3 2 1 1 2 1 0 0 1 0];
-% aaa = 1;
-% bbb = 6;
-% Tout = (bbb-aaa).*rand(Tf/Ts,1) + aaa;
-% Tout = 6*ones(1, 24);
+aaa = 5;
+bbb = 18;
+Tout = (bbb-aaa).*rand(Tf/Ts,1) + aaa;
 % Ref = [zeros(1, 7) 20*ones(1, 9) zeros(1, 8)];
 Ref = 20*ones(1, 24);
 % Ref = [zeros(1, Tf/3) 19*ones(1,2*(Tf/3))];
@@ -43,9 +40,6 @@ alpha = 0.15;
 theta = 0.15;
 gama = 0.7;
 
-%% Faults
-
-biais_sensor = 1;
 
 %% Env Creation
 mdl = 'model';
@@ -60,7 +54,7 @@ obsInfo.Name = 'Observations';
 obsInfo.Description = 'Tout, Tzone';
 
 %% Agent creation
-L = 3;
+L = 10;
 dnn = [
     featureInputLayer(obsInfo.Dimension(1), 'Normalization', 'none', 'Name', 'state')
     fullyConnectedLayer(L, 'Name', 'fc2')
@@ -95,10 +89,6 @@ agent = rlDQNAgent(critic,agentOptions);
 
 agentBlk = [mdl '/RL Agent'];
 
-%% Faults
-
-biais_sensor = 1;
-
 %% Env definition
 agentBlk = [mdl '/RL Agent'];
 env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
@@ -106,12 +96,12 @@ env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
 env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);
 
 %% Train part
-maxepisodes = 1500;
+maxepisodes = 5000;
 maxsteps = ceil(Tf/Ts);
 trainOpts = rlTrainingOptions(...
     'MaxEpisodes',maxepisodes, ...
     'MaxStepsPerEpisode',maxsteps, ...
-    'ScoreAveragingWindowLength',20, ...
+    'ScoreAveragingWindowLength',30, ...
     'Verbose',false, ...
     'Plots','training-progress',...
     'StopTrainingCriteria','AverageReward',...

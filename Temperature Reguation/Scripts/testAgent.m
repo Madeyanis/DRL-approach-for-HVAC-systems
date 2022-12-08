@@ -64,7 +64,8 @@ obsInfo.Description = 'Tout, Tzone';
 
 %% Env definition
 agentBlk = [mdl '/RL Agent'];
-load('AgentDQN147.mat', 'agent')
+agent = load("Agent1845.mat");
+agent = agent.saved_agent;
 env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
 
 env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);
@@ -74,15 +75,15 @@ maxsteps = ceil(Tf/Ts);
 simOpts = rlSimulationOptions('MaxSteps',maxsteps);
 experiences = sim(env,agent,simOpts);
 
-%% sauvegarder les matrices
-tz = experiences.SimulationInfo.simout.Data(1:5:end, 2);
-tz(1) = [];
-tz(25:end) = [];
-fault = experiences.SimulationInfo.simout.Data(1:5:end, 1);
-fault(1) = [];
-fault(25:end) = [];
-control = experiences.SimulationInfo.simout.Data(1:5:end, 3);
-control(1) = [];
-control(25:end) = [];
-matrixAsauvegarder = [Tout; Ref; tz'; fault'; control'];
-save('C:\Users\masdoua1\OneDrive\GitHub\RL approach\Temperature Reguation\Scripts\Data\exp27.mat', 'matrixAsauvegarder');
+% %% sauvegarder les matrices
+% tz = experiences.SimulationInfo.simout.Data(1:5:end, 2);
+% tz(1) = [];
+% tz(25:end) = [];
+% fault = experiences.SimulationInfo.simout.Data(1:5:end, 1);
+% fault(1) = [];
+% fault(25:end) = [];
+% control = experiences.SimulationInfo.simout.Data(1:5:end, 3);
+% control(1) = [];
+% control(25:end) = [];
+% matrixAsauvegarder = [Tout; Ref; tz'; fault'; control'];
+% save('C:\Users\masdoua1\OneDrive\GitHub\RL approach\Temperature Reguation\Scripts\Data\exp27.mat', 'matrixAsauvegarder');

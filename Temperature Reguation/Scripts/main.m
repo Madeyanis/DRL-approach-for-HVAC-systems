@@ -43,13 +43,9 @@ alpha = 0.15;
 theta = 0.15;
 gama = 0.7;
 
-%% Faults
-
-biais_sensor = 1;
-
 %% Env Creation
 mdl = 'model';
-
+biais_sensor = 0;
 % Observations and actions definitions
 actInfo = rlFiniteSetSpec([0, 1, 4, 7]);
 actInfo.Name = 'Heater';
@@ -60,7 +56,7 @@ obsInfo.Name = 'Observations';
 obsInfo.Description = 'Tout, Tzone';
 
 %% Agent creation
-L = 3;
+L = 20;
 dnn = [
     featureInputLayer(obsInfo.Dimension(1), 'Normalization', 'none', 'Name', 'state')
     fullyConnectedLayer(L, 'Name', 'fc2')
@@ -95,9 +91,7 @@ agent = rlDQNAgent(critic,agentOptions);
 
 agentBlk = [mdl '/RL Agent'];
 
-%% Faults
 
-biais_sensor = 1;
 
 %% Env definition
 agentBlk = [mdl '/RL Agent'];
@@ -106,14 +100,17 @@ env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
 env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);
 
 %% Train part
-maxepisodes = 1500;
+maxepisodes = 5000;
 maxsteps = ceil(Tf/Ts);
 trainOpts = rlTrainingOptions(...
     'MaxEpisodes',maxepisodes, ...
     'MaxStepsPerEpisode',maxsteps, ...
-    'ScoreAveragingWindowLength',20, ...
+    'ScoreAveragingWindowLength',50, ...
     'Verbose',false, ...
     'Plots','training-progress',...
+    'SaveAgentCriteria', 'EpisodeReward', ...
+    'SaveAgentValue', -100, ...
+    'SaveAgentDirectory', 'C:\Users\masdoua1\OneDrive\GitHub\RL approach\Temperature Reguation\Scripts', ...
     'StopTrainingCriteria','AverageReward',...
     'StopTrainingValue',100000000);
 

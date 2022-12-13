@@ -31,7 +31,7 @@ c = 1256; c = c / 3600;
 
 
 Tout = [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 4, 5, 5, 4, 4, 3, 3, 2, 2, 1, 2, 1, 0, 0];
-% Tout = Tout + 5;
+Tout = Tout + 2.5;
 % aaa = 1;
 % bbb = 6;
 % Tout = (bbb-aaa).*rand(Tf/Ts,1) + aaa;

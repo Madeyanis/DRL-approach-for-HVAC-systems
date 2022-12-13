@@ -16,7 +16,7 @@ s1 = (6*4) * 2;
 s2 = (6*3.5) * 2;
 s3 = (4*3.5) * 2;
 s = s1 + s2 + s3;
-R = e * k/s; R = R*5.5; % modification de la valeur de R
+R = e * k/s; R = R*2.5; % Plus la resistance est grande plus le building est bien isolé.
 c = 1256; c = c / 3600;
 
 % Tref et Tout

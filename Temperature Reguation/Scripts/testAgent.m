@@ -1,3 +1,4 @@
+%% ONOFF controller
 
 clear all
 close all
@@ -46,44 +47,4 @@ theta = 0.15;
 gama = 0.7;
 
 %% Faults
-
 biais_sensor = 1;
-
-
-%% Env Creation
-mdl = 'model';
-
-% Observations and actions definitions
-actInfo = rlFiniteSetSpec([0, 1, 4, 7]);
-actInfo.Name = 'Heater';
-actInfo.Description = 'Heater Level';
-
-obsInfo = rlNumericSpec([3 1]);
-obsInfo.Name = 'Observations';
-obsInfo.Description = 'Tout, Tzone';
-
-
-%% Env definition
-agentBlk = [mdl '/RL Agent'];
-load('AgentDQN147.mat', 'agent')
-env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
-
-env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);
-
-%% Simulate trained agent
-maxsteps = ceil(Tf/Ts);
-simOpts = rlSimulationOptions('MaxSteps',maxsteps);
-experiences = sim(env,agent,simOpts);
-
-%% sauvegarder les matrices
-tz = experiences.SimulationInfo.simout.Data(1:5:end, 2);
-tz(1) = [];
-tz(25:end) = [];
-fault = experiences.SimulationInfo.simout.Data(1:5:end, 1);
-fault(1) = [];
-fault(25:end) = [];
-control = experiences.SimulationInfo.simout.Data(1:5:end, 3);
-control(1) = [];
-control(25:end) = [];
-matrixAsauvegarder = [Tout; Ref; tz'; fault'; control'];
-save('C:\Users\masdoua1\OneDrive\GitHub\RL approach\Temperature Reguation\Scripts\Data\exp27.mat', 'matrixAsauvegarder');

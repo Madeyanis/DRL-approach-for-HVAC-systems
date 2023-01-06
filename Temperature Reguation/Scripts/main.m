@@ -7,7 +7,6 @@ clc
 %% Simulation parameters
 Ts = 0.2;
 Tf = 24;
-
 %% Buidling 
 mdot = 50;
 Volume = 84;

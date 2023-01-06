@@ -2,9 +2,13 @@ clear all
 close all
 clc
 
+
+
+%% Simulation parameters
 Ts = 0.2;
 Tf = 24;
 
+%% Buidling 
 mdot = 50;
 Volume = 84;
 DensiteAir = 1.204;
@@ -17,10 +21,6 @@ s3 = (4*3.5) * 2;
 s = s1 + s2 + s3;
 R = e * k/s ; R = R*10;
 c = 1256; c = c / 3600;
-
-% Tref et Tout
-% Tout = 13 + 2*rand(1, 24);
-
 Atz = -(mdot/(10*M)) - (1/(M*c*R));
 Bd = (1/(M*c*R));
 % Bd = Bd *10;

@@ -26,4 +26,4 @@ plot(data.Date_, data.DHI, 'Color','green')
 hold on
 plot(data.Date_, data.GHI, 'Color','red')
 hold on 
-plot(data.Date_, data.DNI, 'Color', 'black')
+plot(data.Date_, data.DNI, 'Color', 'black', LineWidth=3)

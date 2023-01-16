@@ -95,57 +95,20 @@ load('AgentDQN147.mat', 'agent')
 env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
 env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);
 
-%% Agent creation
-L = 10;
-dnn = [
-    featureInputLayer(obsInfo.Dimension(1), 'Normalization', 'none', 'Name', 'state')
-    fullyConnectedLayer(L, 'Name', 'fc2')
-    reluLayer('Name','relu2')
-    fullyConnectedLayer(L+1,'Name','fc10')
-    reluLayer('Name','relu10')
-    fullyConnectedLayer(L+1,'Name','fc11')
-    reluLayer('Name','relu11')
-    fullyConnectedLayer(L+1,'Name','fc12')
-    reluLayer('Name','relu12')
-    dropoutLayer(0.5)
-    fullyConnectedLayer(length(actInfo.Elements), 'Name', 'output')];
-
-
-% set some options for the critic
-criticOpts = rlRepresentationOptions('LearnRate',0.005,'GradientThreshold',1);
-
-% create the critic based on the network approximator
-critic = rlQValueRepresentation(dnn,obsInfo,actInfo,'Observation',{'state'},criticOpts);
-
-agentOptions = rlDQNAgentOptions(...
-    'UseDoubleDQN',false, ...
-    'TargetSmoothFactor',5e-3, ...
-    'SampleTime', Ts, ...
-    'ExperienceBufferLength',1e6, ...
-    'NumStepsToLookAhead', 1, ...
-    'SequenceLength',1);
-
-agentOptions.EpsilonGreedyExploration.EpsilonDecay = 1e-5;
-
-agent = rlDQNAgent(critic,agentOptions);
-
-agentBlk = [mdl '/RL Agent'];
-
-%% Env definition
-agentBlk = [mdl '/RL Agent'];
-env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
-env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);
-
-%% Train part
-maxepisodes = 5000;
+%% Simulate trained agent
 maxsteps = ceil(Tf/Ts);
-trainOpts = rlTrainingOptions(...
-    'MaxEpisodes',maxepisodes, ...
-    'MaxStepsPerEpisode',maxsteps, ...
-    'ScoreAveragingWindowLength',30, ...
-    'Verbose',false, ...
-    'Plots','training-progress',...
-    'StopTrainingCriteria','AverageReward',...
-    'StopTrainingValue',100000000);
+simOpts = rlSimulationOptions('MaxSteps',maxsteps);
+experiences = sim(env,agent,simOpts);
 
-trainingStats = train(agent,env,trainOpts);
+% %% sauvegarder les matrices
+% tz = experiences.SimulationInfo.simout.Data(1:5:end, 2);
+% tz(1) = [];
+% tz(25:end) = [];
+% fault = experiences.SimulationInfo.simout.Data(1:5:end, 1);
+% fault(1) = [];
+% fault(25:end) = [];
+% control = experiences.SimulationInfo.simout.Data(1:5:end, 3);
+% control(1) = [];
+% control(25:end) = [];
+% matrixAsauvegarder = [Tout; Ref; tz'; fault'; control'];
+% save('C:\Users\masdoua1\OneDrive\GitHub\RL approach\Temperature Reguation\Scripts\Data\exp27.mat', 'matrixAsauvegarder');

@@ -82,9 +82,9 @@ actInfo = rlFiniteSetSpec([0, 1, 4, 7]);
 actInfo.Name = 'Heater';
 actInfo.Description = 'Heater Level';
 
-obsInfo = rlNumericSpec([3 1]);
+obsInfo = rlNumericSpec([6 1]);
 obsInfo.Name = 'Observations';
-obsInfo.Description = 'Tout, Tzone';
+obsInfo.Description = 'Tref, Tout, Tzone, SolarRadiation, HumanAct, Appliances';
 
 %% Faults
 biais_sensor = 0;
@@ -96,7 +96,7 @@ env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
 env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);
 
 %% Agent creation
-L = 10;
+L = 200;
 dnn = [
     featureInputLayer(obsInfo.Dimension(1), 'Normalization', 'none', 'Name', 'state')
     fullyConnectedLayer(L, 'Name', 'fc2')
@@ -107,7 +107,7 @@ dnn = [
     reluLayer('Name','relu11')
     fullyConnectedLayer(L+1,'Name','fc12')
     reluLayer('Name','relu12')
-    dropoutLayer(0.5)
+    dropoutLayer(0.7)
     fullyConnectedLayer(length(actInfo.Elements), 'Name', 'output')];
 
 
@@ -144,8 +144,12 @@ trainOpts = rlTrainingOptions(...
     'MaxStepsPerEpisode',maxsteps, ...
     'ScoreAveragingWindowLength',30, ...
     'Verbose',false, ...
-    'Plots','training-progress',...
+     'Plots','training-progress',...
+    'SaveAgentCriteria', 'EpisodeReward', ...
+    'SaveAgentValue', -100, ...
+    'SaveAgentDirectory', 'C:\Users\masdoua1\OneDrive\GitHub\RL approach\Temperature Reguation\Scripts\Agents', ...
     'StopTrainingCriteria','AverageReward',...
     'StopTrainingValue',100000000);
+
 
 trainingStats = train(agent,env,trainOpts);

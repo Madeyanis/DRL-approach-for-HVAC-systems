@@ -49,6 +49,7 @@ WeatherData = table2array(WeatherData);
 
 % Data selection
 
+%
 
 c = 1;
 for i = 1 : length(WeatherData)
@@ -61,9 +62,8 @@ for i = 1 : length(WeatherData)
     end
 end
 
-Tout = Tout
-
-plot(Tout)
+Tout = Tout(1:4:end);
+It = It(1:4:end);
 
 %% Env Creation
 % Temperature initialization
@@ -71,9 +71,9 @@ Ref = 20*ones(1, 24);
 Tz_init = Tout(1);
 % Human Activity
 Qh = 150; % human apport
-HumanAct = [ones(1, 24)]; % changer ça en [ones(1, 12) ones(2, 12)]
+HumanAct = [zeros(1, 8) ones(1, 8) zeros(1, 8)]; % changer ça en [ones(1, 12) ones(2, 12)]
 % Appliances and equipments
-App_Equi = [ones(1, 24)];
+App_Equi = [zeros(1, 8) ones(1, 8) zeros(1, 8)];
 Qe = 100;
 
 mdl = 'model';
@@ -82,16 +82,16 @@ actInfo = rlFiniteSetSpec([0, 1, 4, 7]);
 actInfo.Name = 'Heater';
 actInfo.Description = 'Heater Level';
 
-obsInfo = rlNumericSpec([3 1]);
+obsInfo = rlNumericSpec([6 1]);
 obsInfo.Name = 'Observations';
-obsInfo.Description = 'Tout, Tzone';
+obsInfo.Description = 'Tref, Tout, Tzone, SolarRadiation, HumanAct, Appliances';
 
 %% Faults
 biais_sensor = 0;
 
 %% Env definition
 agentBlk = [mdl '/RL Agent'];
-load('AgentDQN147.mat', 'agent')
+load('Agent1038.mat', 'agent')
 env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
 env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);
 

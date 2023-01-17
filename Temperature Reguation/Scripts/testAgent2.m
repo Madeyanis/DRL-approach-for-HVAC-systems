@@ -17,7 +17,7 @@ s2 = (6*3.5) * 2;
 s3 = (4*3.5) * 2;
 s = s1 + s2 + s3;
 R = e * k/s ; 
-R = R/120;
+R = R/150;
 c = 1256; c = c / 3600;
 Atz = -(mdot/(10*M)) - (1/(M*c*R));
 Bd = (1/(M*c*R));
@@ -82,16 +82,17 @@ actInfo = rlFiniteSetSpec([0, 1, 4, 7]);
 actInfo.Name = 'Heater';
 actInfo.Description = 'Heater Level';
 
-obsInfo = rlNumericSpec([3 1]);
+obsInfo = rlNumericSpec([6 1]);
 obsInfo.Name = 'Observations';
-obsInfo.Description = 'Tout, Tzone';
+obsInfo.Description = 'Tref, Tout, Tzone, SolarRadiation, HumanAct, Appliances';
 
 %% Faults
 biais_sensor = 0;
 
 %% Env definition
 agentBlk = [mdl '/RL Agent'];
-load('AgentDQN147.mat', 'agent')
+agent = load('Agent1038.mat');
+agent = agent.saved_agent;
 env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
 env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);
 

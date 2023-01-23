@@ -91,7 +91,7 @@ biais_sensor = 0;
 
 %% Env definition
 agentBlk = [mdl '/RL Agent'];
-agent = load('SavedAgents\Agent1038.mat');
+agent = load('SavedAgents\Agent2361.mat');
 agent = agent.saved_agent;
 env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
 env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);

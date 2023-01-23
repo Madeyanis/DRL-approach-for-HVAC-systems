@@ -91,22 +91,34 @@ biais_sensor = 0;
 
 %% Env definition
 agentBlk = [mdl '/RL Agent'];
-load('AgentDQN147.mat', 'agent')
+% load('AgentDQN147.mat', 'agent')
 env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
 env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);
 
 %% Agent creation
-L = 200;
+L = 150;
 dnn = [
     featureInputLayer(obsInfo.Dimension(1), 'Normalization', 'none', 'Name', 'state')
+    fullyConnectedLayer(L, 'Name', 'fc1')
+    reluLayer('Name','relu1')
     fullyConnectedLayer(L, 'Name', 'fc2')
     reluLayer('Name','relu2')
+    fullyConnectedLayer(L, 'Name', 'fc3')
+    reluLayer('Name','relu3')
+    fullyConnectedLayer(L, 'Name', 'fc4')
+    reluLayer('Name','relu4')
+    fullyConnectedLayer(L, 'Name', 'fc5')
+    reluLayer('Name','relu5')
+    fullyConnectedLayer(L, 'Name', 'fc6')
+    reluLayer('Name','relu6')
+    fullyConnectedLayer(L, 'Name', 'fc7')
+    reluLayer('Name','relu7')
+    fullyConnectedLayer(L+1,'Name','fc8')
+    reluLayer('Name','relu8')
+    fullyConnectedLayer(L+1,'Name','fc9')
+    reluLayer('Name','relu9')
     fullyConnectedLayer(L+1,'Name','fc10')
     reluLayer('Name','relu10')
-    fullyConnectedLayer(L+1,'Name','fc11')
-    reluLayer('Name','relu11')
-    fullyConnectedLayer(L+1,'Name','fc12')
-    reluLayer('Name','relu12')
     dropoutLayer(0.7)
     fullyConnectedLayer(length(actInfo.Elements), 'Name', 'output')];
 
@@ -147,7 +159,8 @@ trainOpts = rlTrainingOptions(...
      'Plots','training-progress',...
     'SaveAgentCriteria', 'EpisodeReward', ...
     'SaveAgentValue', -100, ...
-    'SaveAgentDirectory', 'C:\Users\masdoua1\OneDrive\GitHub\RL approach\Temperature Reguation\Scripts\Agents', ...
+    'SaveAgentDirectory', ['C:\Users\masdoua1\OneDrive\GitHub\' ...
+    'RL approach\Temperature Reguation\Scripts\Agents'], ...
     'StopTrainingCriteria','AverageReward',...
     'StopTrainingValue',100000000);
 

@@ -52,11 +52,34 @@ biais_sensor = 1;
 %% Evaluation the control
 
 % Temperature regulation (RMSE)
-Tzone = out.TemperatureRegulation.Data(:, 1);
-Treference = out.TemperatureRegulation.Data(:, 2);
+Tzone = out.TR.Data(:, 1);
+Treference = out.TR.Data(:, 2);
 E_T_R = mae(Tzone, Treference);
 % Energy consumption
 E_C = out.Energy.Data(end, 1);
 % Use of Equipment
 Commands = out.Energy.Data(:, 2);
 plot(diff(Commands))
+
+
+OnOffCommands = Commands;
+dif_OnOff = diff(OnOffCommands);
+
+%% Load Rl commands
+RL_Commands = load("commandRL.mat").Commands ;
+Dif_RL = diff(RL_Commands);
+
+
+figure;
+subplot(2, 2, 1)
+plot(RL_Commands)
+ylim([0, 8])
+subplot(2, 2, 2)
+plot(OnOffCommands)
+ylim([0, 8])
+subplot(2, 2, 3)
+plot(Dif_RL)
+ylim([-8 8])
+subplot(2, 2, 4)
+plot(dif_OnOff)
+ylim([-8 8])

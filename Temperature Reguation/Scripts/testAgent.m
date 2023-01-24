@@ -69,20 +69,41 @@ env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
 
 env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);
 
-%% Simulate trained agent
-maxsteps = ceil(Tf/Ts);
-simOpts = rlSimulationOptions('MaxSteps',maxsteps);
-experiences = sim(env,agent,simOpts);
 
-%% sauvegarder les matrices
-tz = experiences.SimulationInfo.simout.Data(1:5:end, 2);
-tz(1) = [];
-tz(25:end) = [];
-fault = experiences.SimulationInfo.simout.Data(1:5:end, 1);
-fault(1) = [];
-fault(25:end) = [];
-control = experiences.SimulationInfo.simout.Data(1:5:end, 3);
-control(1) = [];
-control(25:end) = [];
-matrixAsauvegarder = [Tout; Ref; tz'; fault'; control'];
-save('C:\Users\masdoua1\OneDrive\GitHub\RL approach\Temperature Reguation\Scripts\Data\exp27.mat', 'matrixAsauvegarder');
+%% Evaluate objectives
+% Run the code below after simulation
+
+% Temperature regulation (RMSE)
+Tzone = out.Temps.Data(:, 1);
+Treference = out.Temps.Data(:, 2);
+E_T_R = mae(Tzone, Treference);
+% Energy consumption
+E_C = out.Energy.Data(end, 1);
+% Use of Equipment
+Commands = out.Energy.Data(:, 2);
+dif = diff(Commands);
+
+
+figure
+plot(Tzone)
+hold on
+plot(Treference)
+
+
+% %% Simulate trained agent
+% maxsteps = ceil(Tf/Ts);
+% simOpts = rlSimulationOptions('MaxSteps',maxsteps);
+% experiences = sim(env,agent,simOpts);
+
+% %% sauvegarder les matrices
+% tz = experiences.SimulationInfo.simout.Data(1:5:end, 2);
+% tz(1) = [];
+% tz(25:end) = [];
+% fault = experiences.SimulationInfo.simout.Data(1:5:end, 1);
+% fault(1) = [];
+% fault(25:end) = [];
+% control = experiences.SimulationInfo.simout.Data(1:5:end, 3);
+% control(1) = [];
+% control(25:end) = [];
+% matrixAsauvegarder = [Tout; Ref; tz'; fault'; control'];
+% save('C:\Users\masdoua1\OneDrive\GitHub\RL approach\Temperature Reguation\Scripts\Data\exp27.mat', 'matrixAsauvegarder');

@@ -52,11 +52,10 @@ biais_sensor = 1;
 %% Evaluation the control
 
 % Temperature regulation (RMSE)
+
 Tzone = out.TemperatureRegulation.Data(:, 1);
 Treference = out.TemperatureRegulation.Data(:, 2);
 E_T_R = mae(Tzone, Treference);
 % Energy consumption
-E_C = out.Energy.Data(end, 1);
+E_C = out.Energy.Data(1, end);
 % Use of Equipment
-Commands = out.Energy.Data(:, 2);
-plot(diff(Commands))

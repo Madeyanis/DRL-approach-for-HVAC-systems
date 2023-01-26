@@ -46,7 +46,7 @@ WeatherData = readtable(['C:\Users\masdoua1\OneDrive\GitHub\RL approach\' ...
 % Transforma data from table to numpy
 
 WeatherData = table2array(WeatherData);
-
+day = 16;
 % Data selection
 
 %
@@ -54,7 +54,7 @@ WeatherData = table2array(WeatherData);
 c = 1;
 for i = 1 : length(WeatherData)
     if WeatherData(i, 2) == 1
-        if WeatherData(i, 3) == 13
+        if WeatherData(i, 3) == day
             Tout(c) = WeatherData(i, 6); % Outside temperature
             It(c) = WeatherData(i, 17); % Solar Radiation GHI
             c = c + 1;
@@ -95,39 +95,13 @@ agentBlk = [mdl '/RL Agent'];
 env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
 env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);
 
-%% Agent creation
-L = 150;
-dnn = [
-    featureInputLayer(obsInfo.Dimension(1), 'Normalization', 'none', 'Name', 'state')
-    fullyConnectedLayer(L, 'Name', 'fc1')
-    reluLayer('Name','relu1')
-    fullyConnectedLayer(L, 'Name', 'fc2')
-    reluLayer('Name','relu2')
-    fullyConnectedLayer(L, 'Name', 'fc3')
-    reluLayer('Name','relu3')
-    fullyConnectedLayer(L, 'Name', 'fc4')
-    reluLayer('Name','relu4')
-    fullyConnectedLayer(L, 'Name', 'fc5')
-    reluLayer('Name','relu5')
-    fullyConnectedLayer(L, 'Name', 'fc6')
-    reluLayer('Name','relu6')
-    fullyConnectedLayer(L, 'Name', 'fc7')
-    reluLayer('Name','relu7')
-    fullyConnectedLayer(L+1,'Name','fc8')
-    reluLayer('Name','relu8')
-    fullyConnectedLayer(L+1,'Name','fc9')
-    reluLayer('Name','relu9')
-    fullyConnectedLayer(L+1,'Name','fc10')
-    reluLayer('Name','relu10')
-    dropoutLayer(0.7)
-    fullyConnectedLayer(length(actInfo.Elements), 'Name', 'output')];
-
+dnn = NN3(obsInfo.Dimension(1), length(actInfo.Elements));
 
 % set some options for the critic
 criticOpts = rlRepresentationOptions('LearnRate',0.005,'GradientThreshold',1);
 
 % create the critic based on the network approximator
-critic = rlQValueRepresentation(dnn,obsInfo,actInfo,'Observation',{'state'},criticOpts);
+critic = rlQValueRepresentation(dnn,obsInfo,actInfo,'Observation',{'state'},'action', {'output'}, criticOpts);
 
 agentOptions = rlDQNAgentOptions(...
     'UseDoubleDQN',false, ...
@@ -135,7 +109,7 @@ agentOptions = rlDQNAgentOptions(...
     'SampleTime', Ts, ...
     'ExperienceBufferLength',1e6, ...
     'NumStepsToLookAhead', 1, ...
-    'SequenceLength',1);
+    'SequenceLength', 1);
 
 agentOptions.EpsilonGreedyExploration.EpsilonDecay = 1e-5;
 

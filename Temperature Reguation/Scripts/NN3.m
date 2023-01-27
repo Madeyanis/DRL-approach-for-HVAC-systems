@@ -1,6 +1,6 @@
 function y = NN3(inputs, outputs)
 
-L = 10;
+L = 15;
 
 y = [
     featureInputLayer(inputs, 'Name', 'state')
@@ -26,6 +26,7 @@ y = [
     reluLayer('Name','RL10')
     fullyConnectedLayer(L, 'Name','fc11')
     reluLayer('Name','RL11')
+    dropoutLayer(0.7)
     fullyConnectedLayer(outputs, 'Name','output')];
 
 end

@@ -95,7 +95,7 @@ agentBlk = [mdl '/RL Agent'];
 env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
 env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);
 
-dnn = NN3(obsInfo.Dimension(1), length(actInfo.Elements));
+dnn = NN(obsInfo.Dimension(1), length(actInfo.Elements));
 
 % set some options for the critic
 criticOpts = rlRepresentationOptions('LearnRate',0.005,'GradientThreshold',1);

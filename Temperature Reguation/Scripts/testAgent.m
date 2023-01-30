@@ -68,18 +68,21 @@ dif_OnOff = diff(OnOffCommands);
 %% Load Rl commands
 RL_Commands = load("commandRL.mat").Commands ;
 Dif_RL = diff(RL_Commands);
+RL_Commands(end)=[];
 
+xx = linspace(0,24,119);
+OnOffCommands(end) = [];
 
 figure;
 subplot(2, 2, 1)
-plot(RL_Commands)
+plot(xx, RL_Commands)
 ylim([0, 8])
 subplot(2, 2, 2)
-plot(OnOffCommands)
+plot(xx, OnOffCommands)
 ylim([0, 8])
 subplot(2, 2, 3)
-plot(Dif_RL)
+plot(xx, Dif_RL)
 ylim([-8 8])
 subplot(2, 2, 4)
-plot(dif_OnOff)
+plot(xx, dif_OnOff)
 ylim([-8 8])

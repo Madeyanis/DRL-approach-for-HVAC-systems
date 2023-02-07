@@ -19,11 +19,11 @@ s = s1 + s2 + s3;
 R = e * k/s ; 
 R = R/120;
 c = 1256; c = c / 3600;
-Atz = -(mdot/(10*M)) - (1/(M*c*R));
-Bd = (1/(M*c*R));
-Bd = 0.03;
-Atz = -0.15;
-Bh = mdot/(3*M);
+% Atz = -(mdot/(10*M)) - (1/(M*c*R));
+% Bd = (1/(M*c*R));
+% Bd = 0.03;
+% Atz = -0.15;
+% Bh = mdot/(3*M);
 
 alpha = 0.15;
 theta = 0.15;
@@ -78,7 +78,7 @@ Qe = 100;
 
 mdl = 'model';
 % Observations and actions definitions
-actInfo = rlFiniteSetSpec([0, 1, 4, 7]);
+actInfo = rlFiniteSetSpec([0, 1, 2, 3, 4]);
 actInfo.Name = 'Heater';
 actInfo.Description = 'Heater Level';
 
@@ -91,7 +91,7 @@ biais_sensor = 0;
 
 %% Env definition
 agentBlk = [mdl '/RL Agent'];
-agent = load('SavedAgents\Agent2361.mat');
+agent = load('SavedAgents\Agent2705.mat');
 agent = agent.saved_agent;
 env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
 env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);

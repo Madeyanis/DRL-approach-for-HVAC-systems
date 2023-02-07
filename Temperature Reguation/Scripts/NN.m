@@ -1,6 +1,6 @@
 function y = NN(inputs, outputs)
 
-L = 100;
+L = 30;
 
 y = [
     featureInputLayer(inputs, 'Normalization', 'none', 'Name', 'state')

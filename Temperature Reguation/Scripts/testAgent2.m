@@ -47,7 +47,7 @@ WeatherData = readtable(['C:\Users\masdoua1\OneDrive\GitHub\RL approach\' ...
 
 WeatherData = table2array(WeatherData);
 
-% Data selection
+% Data selectio n
 
 %
 
@@ -78,7 +78,7 @@ Qe = 100;
 
 mdl = 'model';
 % Observations and actions definitions
-actInfo = rlFiniteSetSpec([0, 1, 2, 3, 4]);
+actInfo = rlFiniteSetSpec([0, 1, 4, 7]);
 actInfo.Name = 'Heater';
 actInfo.Description = 'Heater Level';
 
@@ -91,7 +91,7 @@ biais_sensor = 0;
 
 %% Env definition
 agentBlk = [mdl '/RL Agent'];
-agent = load('SavedAgents\Agent2705.mat');
+agent = load('SavedAgents\Agent2888.mat');
 agent = agent.saved_agent;
 env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
 env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);

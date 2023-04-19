@@ -76,9 +76,9 @@ HumanAct = [zeros(1, 8) ones(1, 8) zeros(1, 8)]; % changer ça en [ones(1, 12) o
 App_Equi = [zeros(1, 8) ones(1, 8) zeros(1, 8)];
 Qe = 100;
 
-mdl = 'model';
+mdl = 'Model_v2';
 % Observations and actions definitions
-actInfo = rlFiniteSetSpec([0, 1, 4, 7]);
+actInfo = rlFiniteSetSpec([0, 1, 4, 6]);
 actInfo.Name = 'Heater';
 actInfo.Description = 'Heater Level';
 
@@ -90,7 +90,7 @@ obsInfo.Description = 'Tref, Tout, Tzone, SolarRadiation, HumanAct, Appliances';
 biais_sensor = 0;
 
 %% Env definition
-agentBlk = [mdl '/RL Agent'];
+agentBlk = [mdl '/Intelligent Controller/RL Agent'];
 % load('AgentDQN147.mat', 'agent')
 env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
 env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);
@@ -118,7 +118,7 @@ agent = rlDQNAgent(critic,agentOptions);
 agentBlk = [mdl '/RL Agent'];
 
 %% Env definition
-agentBlk = [mdl '/RL Agent'];
+agentBlk = [mdl '/Intelligent Controller/RL Agent'];
 env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
 env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);
 
@@ -132,7 +132,7 @@ trainOpts = rlTrainingOptions(...
     'Verbose',false, ...
      'Plots','training-progress',...
     'SaveAgentCriteria', 'EpisodeReward', ...
-    'SaveAgentValue', 1000, ...
+    'SaveAgentValue', 4000, ...
     'SaveAgentDirectory', ['C:\Users\masdoua1\OneDrive\GitHub\' ...
     'RL approach\Temperature Reguation\Scripts\Agents'], ...
     'StopTrainingCriteria','AverageReward',...

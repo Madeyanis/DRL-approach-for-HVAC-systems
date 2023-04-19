@@ -1,5 +1,5 @@
 clear all;
-close all;
+% close all;
 clc;
 
 %% Simulation parameters
@@ -76,9 +76,9 @@ HumanAct = [zeros(1, 8) ones(1, 8) zeros(1, 8)]; % changer ça en [ones(1, 12) o
 App_Equi = [zeros(1, 8) ones(1, 8) zeros(1, 8)];
 Qe = 100;
 
-mdl = 'model';
+mdl = 'Model_v2';
 % Observations and actions definitions
-actInfo = rlFiniteSetSpec([0, 1, 4, 7]);
+actInfo = rlFiniteSetSpec([0, 1, 4, 6]);
 actInfo.Name = 'Heater';
 actInfo.Description = 'Heater Level';
 
@@ -90,8 +90,8 @@ obsInfo.Description = 'Tref, Tout, Tzone, SolarRadiation, HumanAct, Appliances';
 biais_sensor = 0;
 
 %% Env definition
-agentBlk = [mdl '/RL Agent'];
-agent = load('SavedAgents\Agent2888.mat');
+agentBlk = [mdl '/Intelligent Controller/RL Agent'];
+agent = load('SavedAgents\Agent1505_best.mat');
 agent = agent.saved_agent;
 env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
 env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);
@@ -101,15 +101,5 @@ maxsteps = ceil(Tf/Ts);
 simOpts = rlSimulationOptions('MaxSteps',maxsteps);
 experiences = sim(env,agent,simOpts);
 
-% %% sauvegarder les matrices
-% tz = experiences.SimulationInfo.simout.Data(1:5:end, 2);
-% tz(1) = [];
-% tz(25:end) = [];
-% fault = experiences.SimulationInfo.simout.Data(1:5:end, 1);
-% fault(1) = [];
-% fault(25:end) = [];
-% control = experiences.SimulationInfo.simout.Data(1:5:end, 3);
-% control(1) = [];
-% control(25:end) = [];
-% matrixAsauvegarder = [Tout; Ref; tz'; fault'; control'];
-% save('C:\Users\masdoua1\OneDrive\GitHub\RL approach\Temperature Reguation\Scripts\Data\exp27.mat', 'matrixAsauvegarder');
+%% Plot
+plotTemperatures(experiences)

@@ -4,13 +4,13 @@ function plotTemperatures(experiences)
     Tz  = experiences.SimulationInfo.out.Data(:, 2);
     com  = experiences.SimulationInfo.out.Data(:, 3);
     t   = experiences.SimulationInfo.out.Time;
-    Fault = experiences.SimulationInfo.FaultDetection.Data(:, 1);
-    Fault = Fault';
-    n = 5;
-    Detection = circshift(Fault,[0,-n]);
-    Detection(end-n+1:end) = zeros(1,n);
+    FD = experiences.SimulationInfo.FaultDetection.Data(:, 1);
+    F = FD;
+    n = 100;
+    F = circshift(FD,[0,-n]);
+    F(end-n+1:end) = zeros(1, n);
 
-    ref(end) = []; Tz(end) = []; t(end) = []; com(end)=[]; Fault(end) = []; Detection(end) = [];
+    ref(end) = []; Tz(end) = []; t(end) = []; com(end)=[]; FD(end) = []; F(end) = [];
 
     figure;
 
@@ -26,13 +26,13 @@ function plotTemperatures(experiences)
     legend('Reference','Zone temperature','FontSize',14)
 
     subplot(312)
-    plot(t, Detection, LineStyle="-", LineWidth=3, Color='red')
+    plot(t, FD, LineStyle="-", LineWidth=3, Color='black')
     hold on 
-    plot(t, Fault, LineStyle="- -", LineWidth=3, Color='blue')
+    plot(t, F, LineStyle="- -", LineWidth=3, Color='red')
     ylim([0, 1.5])
     xlabel('Time (h)')
     grid minor
-    legend('Fault apparence', 'Real Time Fault Detection', 'FontSize',14)
+    legend('Real Time Fault Detection', 'FontSize',14)
 
     subplot(313)
     plot(t, com, LineWidth=3, Color='red')

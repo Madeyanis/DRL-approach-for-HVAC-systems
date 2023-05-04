@@ -3,7 +3,7 @@ clear all;
 clc;
 
 %% Simulation parameters
-Ts = 0.2;
+Ts = 0.05;
 Tf = 24;
 %% Buidling 
 mdot = 50;
@@ -82,16 +82,16 @@ actInfo = rlFiniteSetSpec([0, 1, 4, 6]);
 actInfo.Name = 'Heater';
 actInfo.Description = 'Heater Level';
 
-obsInfo = rlNumericSpec([6 1]);
+obsInfo = rlNumericSpec([7 1]);
 obsInfo.Name = 'Observations';
-obsInfo.Description = 'Tref, Tout, Tzone, SolarRadiation, HumanAct, Appliances';
+obsInfo.Description = 'Tref, Tout, Tzone, SolarRadiation, HumanAct, Appliances, FaultsDetection';
 
 %% Faults
 biais_sensor = 0;
 
 %% Env definition
 agentBlk = [mdl '/Intelligent Controller/RL Agent'];
-agent = load('SavedAgents\Agent1505_best.mat');
+agent = load('SavedAgents\Agent187.mat');
 agent = agent.saved_agent;
 env = rlSimulinkEnv(mdl,agentBlk, obsInfo, actInfo);
 env.ResetFcn = @(in) setVariable(in,'Tz',Tout(1),'Workspace',mdl);

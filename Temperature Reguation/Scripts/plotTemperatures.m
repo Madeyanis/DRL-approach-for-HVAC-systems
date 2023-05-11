@@ -6,7 +6,7 @@ function plotTemperatures(experiences)
     t   = experiences.SimulationInfo.out.Time;
     Fault = experiences.SimulationInfo.FaultDetection.Data(:, 1);
     Fault = Fault';
-    n = 5;
+    n = 2;
     Detection = circshift(Fault,[0,-n]);
     Detection(end-n+1:end) = zeros(1,n);
 
@@ -18,7 +18,6 @@ function plotTemperatures(experiences)
     plot(t, ref, LineStyle="--", LineWidth=3, Color='green')
     hold on
     plot(t, Tz, LineStyle="-", LineWidth=3, Color='blue')
-    xticks(0:5:25)
     ylim ([0, 25]);
     xlabel('Time (h)')
     ylabel('Temperature (°C)')
@@ -36,7 +35,7 @@ function plotTemperatures(experiences)
 
     subplot(313)
     plot(t, com, LineWidth=3, Color='red')
-    ylim([0, 8])
+    ylim([0, 11])
     xlabel('Time (h)')
     ylabel('Heating command level')
     grid minor

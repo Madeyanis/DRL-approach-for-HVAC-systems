@@ -6,7 +6,7 @@ function plotTemperatures(experiences)
     t   = experiences.SimulationInfo.out.Time;
     Fault = experiences.SimulationInfo.FaultDetection.Data(:, 1);
     Fault = Fault';
-    n = 5;
+    n = 3;
     Detection = circshift(Fault,[0,-n]);
     Detection(end-n+1:end) = zeros(1,n);
 
@@ -32,7 +32,7 @@ function plotTemperatures(experiences)
     ylim([0, 1.5])
     xlabel('Time (h)')
     grid minor
-    legend('Fault apparence', 'Real Time Fault Detection', 'FontSize',14)
+    legend('Fault apparence', 'Real Time FDI (Heater Resistor Fault)', 'FontSize',14)
 
     subplot(313)
     plot(t, com, LineWidth=3, Color='red')

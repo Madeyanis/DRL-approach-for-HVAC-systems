@@ -20,26 +20,26 @@ function plotTemperatures(experiences)
     plot(t, Tz, LineStyle="-", LineWidth=3, Color='blue')
     xticks(0:5:25)
     ylim ([0, 25]);
-    xlabel('Time (h)')
     ylabel('Temperature (°C)')
+    set(gca,"FontSize",20)
     grid minor
-    legend('Reference','Zone temperature','FontSize',14)
+    legend('Reference','Zone temperature','FontSize', 20)
 
     subplot(312)
     plot(t, Detection, LineStyle="-", LineWidth=3, Color='red')
     hold on 
     plot(t, Fault, LineStyle="- -", LineWidth=3, Color='blue')
     ylim([0, 1.5])
-    xlabel('Time (h)')
+    set(gca,"FontSize",20)
     grid minor
-    legend('Fault apparence', 'Real Time FDI (Heater Resistor Fault)', 'FontSize',14)
+    legend('Fault apparence', 'Real Time FDI', 'FontSize', 20)
 
     subplot(313)
     plot(t, com, LineWidth=3, Color='red')
     ylim([0, 8])
     xlabel('Time (h)')
-    ylabel('Heating command level')
+    set(gca,"FontSize",20)
     grid minor
-    legend('HVAC System Command', 'FontSize',14)
+    legend('HVAC System Command', 'FontSize', 20)
   
 end

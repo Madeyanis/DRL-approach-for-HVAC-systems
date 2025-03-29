@@ -11,7 +11,7 @@ obsInfo.Name = 'Tzone';
 
 %% Definition du modèle
 
-data = readtable('C:\Users\masdoua1\OneDrive\Research\Trnsys\building project\BuildingProject7\ResultsWithoutGainTheatOn.txt');
+data = readtable('ResultsWithoutGainTheatOn.txt');
 data = table2array(data);
 data(1, :) = [];
 
